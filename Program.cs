@@ -4,6 +4,9 @@ static class CircularDominoChain
 {
     // The file name containing the input data for the app.
     private const string InputFileName = "input_test2.txt";
+    
+    // The constant with the text indicating that the dominoes cannot form a circular chain.
+    private const string ErrorMessage = "It is impossible to form a circular domino chain.";
         
     public static void Main()
     {
@@ -15,28 +18,23 @@ static class CircularDominoChain
             Console.WriteLine($"Error: No valid dominoes found in {InputFileName}");
             return;
         }
-
-        List<(int, int)> result;
         
         // Preliminary check: Are all numbers appearing an even number of times?
         if (CanFormCircularChain(dominos))
         {
             // Attempt to build the chain.
-            result = FindCircularChain(dominos);
+            var result = FindCircularChain(dominos);
+            
+            if (result.Any())
+            {
+                Console.WriteLine("Circular domino chain: " + 
+                                  string.Join(" ", result.Select(d => $"[{d.Item1}|{d.Item2}]")));
+            }
+            else
+                Console.WriteLine(ErrorMessage);
         }
         else
-        {
-            Console.WriteLine("It is impossible to form a circular domino chain.");
-            return;
-        }
-
-        if (!result.Any())
-            Console.WriteLine("It is impossible to form a circular domino chain.");
-        else
-        {
-            Console.WriteLine("Circular domino chain: " + 
-                              string.Join(" ", result.Select(d => $"[{d.Item1}|{d.Item2}]")));
-        }
+            Console.WriteLine(ErrorMessage);
     }
 
     // Read and parse the input data file.
